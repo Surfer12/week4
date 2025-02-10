@@ -1,0 +1,39 @@
+LSB Block (Half Adder) Implementation
+
+1. Component Selection:
+   - 2x NAND gates
+   - 1x OR gate
+   - 1x AND gate (for carry)
+
+2. Gate-Level Implementation:
+   a) XOR Implementation for Sum:
+      - NAND1(A,B) -> N1
+      - NAND2(A,B) -> N2
+      - NAND3(N1,N2) -> Sum[0]
+   
+   b) Carry Implementation:
+      - AND(A,B) -> Carry_out
+
+3. Connections:
+   Inputs:
+   - A[0]: First input bit
+   - B[0]: Second input bit
+   
+   Internal Nodes:
+   - N1: Output of first NAND
+   - N2: Output of second NAND
+   
+   Outputs:
+   - Sum[0]: Final sum output
+   - Carry_out: Carry output for next stage
+
+4. Expected Timing:
+   Sum path: 3 gate delays (~30ns)
+   Carry path: 1 gate delay (~10ns)
+
+5. LTSpice Symbol Parameters:
+   Pin Order:
+   Left side: A[0], B[0]
+   Right side: Sum[0], Carry_out
+   Symbol Size: 2x2 grid units
+   Label: "LSB_ADD"
