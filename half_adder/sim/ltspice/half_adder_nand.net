@@ -1,0 +1,9 @@
+* Half Adder - NAND-based Implementation
+XU1 A B vdd 0 N001 NAND
+XU2 A B vdd 0 N002 NAND
+XU3 N001 N002 vdd 0 N003 NAND
+XU4 N003 vdd 0 SUM ORx
+XU5 A B vdd 0 CARRY ANDx
+Vdd vdd 0 5V
+.tran 0 100n
+.end

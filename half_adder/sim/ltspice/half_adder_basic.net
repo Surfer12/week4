@@ -1,0 +1,10 @@
+* Half Adder - Basic Implementation
+XU1 A vdd 0 N001 INVERT      ; A'
+XU2 B vdd 0 N002 INVERT      ; B'
+XU3 N001 B vdd 0 N003 ANDx   ; A'B
+XU4 A N002 vdd 0 N004 ANDx   ; AB'
+XU5 N003 N004 vdd 0 SUM ORx  ; Sum
+XU6 A B vdd 0 CARRY ANDx     ; Carry
+Vdd vdd 0 5V
+.tran 0 100n
+.end
