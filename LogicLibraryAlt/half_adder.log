@@ -1,0 +1,21 @@
+LTspice 24.1.1 for Windows
+Circuit: C:\Users\ryano\OneDrive\Desktop\LogicLibraryAlt\half_adder.net
+Start Time: Sat Feb  8 06:23:05 2025
+C:\Users\ryano\OneDrive\Desktop\LogicLibraryAlt\half_adder.net(11): Node or model name expected.
+M1 NAND A N001 N001 Sp2025P
+                   ^^^^^^^^
+C:\Users\ryano\OneDrive\Desktop\LogicLibraryAlt\half_adder.net(12): Node or model name expected.
+M2 NAND B N001 N001 Sp2025P
+                   ^^^^^^^^
+C:\Users\ryano\OneDrive\Desktop\LogicLibraryAlt\half_adder.net(13): Node or model name expected.
+M3 NAND A N002 N002 Sp2025N
+                   ^^^^^^^^
+C:\Users\ryano\OneDrive\Desktop\LogicLibraryAlt\half_adder.net(14): Node or model name expected.
+M4 N002 B 0 0 Sp2025N
+             ^^^^^^^^
+C:\Users\ryano\OneDrive\Desktop\LogicLibraryAlt\half_adder.net(19): Node or model name expected.
+M1 NA A N001 N001 Sp2025P
+                 ^^^^^^^^
+C:\Users\ryano\OneDrive\Desktop\LogicLibraryAlt\half_adder.net(20): Node or model name expected.
+M4 NA A 0 0 Sp2025N
+           ^^^^^^^^
