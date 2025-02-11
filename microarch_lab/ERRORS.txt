@@ -1,3 +1,0 @@
-# Errors encountered during testing (added with magic)
-
-E   ModuleNotFoundError: No module named 'computer_use_demo'
