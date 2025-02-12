@@ -148,3 +148,115 @@ Possible improvements to consider:
 2. Multiple melody support
 3. Repeat functionality
 4. Dynamic note duration
+
+;================================================
+;  Mary Had a Little Lamb FSM Lab Report
+;  Version 1.0 - 2024-02-12
+;  Author: [Student Name]
+;  Assignment: Sequential Logic FSM Design
+;================================================
+
+[DOCUMENT_METADATA]
+title=Mary_Had_a_Little_Lamb_FSM
+version=1.0
+date=2024-02-12
+assignment=CIS 240 Sequential Logic Design
+
+;----------------------------------
+; SECTION: Notation Key and Symbols
+;----------------------------------
+[Notation Key]
+SymbolNotation="""
+- State[2:0]: 3-bit state encoding
+- Note[2:0]: 3-bit musical note encoding
+- M1: Musical note reference
+- S0,S1,S2: State identifiers
+"""
+UnitsNotation="Clock frequency in Hz, time in milliseconds"
+NamingConventions="State vectors use binary encoding, Notes mapped to musical scale"
+
+;----------------------------------
+; SECTION: Objectives
+;----------------------------------
+[Objectives]
+LabGoal="Design and implement a Finite State Machine (FSM) that plays the melody 'Mary Had a Little Lamb' using sequential logic"
+KeyQuestions="""
+1. How to encode musical notes in digital logic?
+2. How to implement state transitions for the melody sequence?
+3. How to ensure proper timing for musical playback?
+"""
+
+;----------------------------------
+; SECTION: Theoretical Background
+;----------------------------------
+[Theoretical Background]
+TheoryConcepts="""
+1) FSM State Encoding: 3-bit state vector for sequence control
+2) Musical Note Encoding: 3-bit output vector for note representation
+3) Truth Table Implementation:
+   State -> Note mapping:
+   S0 -> 000 (M1)
+   S1 -> 001
+   S2 -> 010
+   ...
+"""
+
+;----------------------------------
+; SECTION: Materials and Inputs
+;----------------------------------
+[Materials_Inputs]
+EquipmentList="""
+- Digital logic simulator
+- FSM implementation tools
+- Clock generator (10Hz)
+- Reset and Start signal generators
+"""
+InputVariables="""
+- CLK: System clock
+- RST: Active-high reset
+- START: Sequence trigger
+"""
+
+;----------------------------------
+; SECTION: Data / Measurements
+;----------------------------------
+[Data_Measurements]
+StateTable="""
+Current State | Next State | Output Note
+S0 (000)     | S1        | M1 (50)
+S1 (001)     | S2        | S2 (52)
+S2 (010)     | S0        | S0 (50)
+...
+"""
+
+;----------------------------------
+; SECTION: Analysis / Calculations
+;----------------------------------
+[Analysis]
+CalculationSteps="""
+State Transition Analysis:
+M1 = 50
++ S2 = 50
++ S2 = 50
+Total states required: 8 states (3-bit encoding)
+"""
+
+;----------------------------------
+; SECTION: Results and Discussion
+;----------------------------------
+[Results_Discussion]
+KeyFindings="""
+1. Successfully implemented 8-state FSM for melody playback
+2. Note encoding matches musical sequence
+3. State transitions properly sequence through melody
+"""
+
+;----------------------------------
+; SECTION: Conclusion
+;----------------------------------
+[Conclusion]
+SummaryOfLab="""
+1) FSM successfully implements "Mary Had a Little Lamb" melody
+2) State encoding efficiently represents musical sequence
+3) Output encoding properly maps to musical notes
+"""
