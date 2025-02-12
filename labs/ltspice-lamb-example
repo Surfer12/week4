@@ -1,0 +1,171 @@
+Below is an LTspice example demonstrating a simplified digital circuit that models the core idea of a finite state machine (FSM) like the “Mary Had a Little Lamb” assignment. While LTspice is primarily an analog circuit simulator, you can still simulate small digital logic blocks (like flip-flops and simple gates) to verify timing and state transitions.
+
+1. Overview
+
+In this sample, we’ll create:
+	•	Three D flip-flops to hold a 3-bit state (giving up to 8 states).
+	•	Simple combinational logic for next-state outputs.
+	•	A clock generator.
+	•	An asynchronous reset.
+
+This mini-FSM increments through states 000, 001, 010, … etc., which you can adapt for the Mary Had a Little Lamb note sequence logic. The netlist and schematic setup below illustrates how you might structure the digital portion in LTspice.
+
+	Note
+If you want to simulate the audio or “notes,” you’d likely do that on an FPGA or microcontroller. In LTspice, you’ll focus on verifying state changes, logic levels, timing, and so on.
+
+2. Sample Netlist (copy into .cir or .net file)
+
+Below is a self-contained example netlist. You can copy/paste this into a file named, for example, fsm_lamb_example.cir, and open/simulate it in LTspice. It uses behavioral sources (B elements) for flip-flops and logic, which is often easier than building them from discrete transistors.
+
+* ==========================================================
+*  LTspice Example: 3-bit FSM with D Flip-Flops
+*  Simplified Next State Logic
+*  (Adapt to Mary Had a Little Lamb or any sequence)
+* ==========================================================
+
+* --- GLOBAL PARAMS ---
+.param VDD=5 RISE=0.1n FALL=0.1n
+
+* --- POWER RAILS ---
+VDD Vdd 0 {VDD}
+
+* --- CLOCK GENERATOR ---
+* Square wave: 1 MHz example (adjust as needed)
+VCLK CLK 0 PULSE(0 {VDD} 0 10n 10n 500n 1u)
+
+* --- ASYNC RESET (manual pulse) ---
+VRESET RST 0 PULSE({VDD} 0 0 10n 10n 2u 5u)
+* The reset goes from HIGH to LOW after 2us,
+* then remains LOW (inactive) so the FSM can run.
+
+* --- D FLIP-FLOPS (Behavioral) ---
+* We'll label them Q0, Q1, Q2 for the 3 bits of state
+* Each flip-flop: Bxxxx <output> <expression referencing D and RST>
+* We use a parameter for E= if RST=1, Q=0 else Q=D
+
+* Flip-Flop #0
+BFF0 Q0 0 V= if( V(RST)>2.5, 0, Delay( V(D0), CLK, 1n) )
+RFF0 Q0 0 1k  ; small resistor for stable node in LTspice
+
+* Flip-Flop #1
+BFF1 Q1 0 V= if( V(RST)>2.5, 0, Delay( V(D1), CLK, 1n) )
+RFF1 Q1 0 1k
+
+* Flip-Flop #2
+BFF2 Q2 0 V= if( V(RST)>2.5, 0, Delay( V(D2), CLK, 1n) )
+RFF2 Q2 0 1k
+
+* --- NEXT-STATE LOGIC ---
+* For a simple “count-up” or custom next state,
+* we define D0, D1, D2 as combinational logic of Q0,Q1,Q2.
+
+* Example: Just a Gray code or binary increment for demonstration
+* If you want Mary-lamb transitions, replace with your custom logic.
+*
+* Binary increment:  (Q0 ^ 1) is new Q0
+* D0 = NOT Q0
+* D1 = Q0 XOR Q1
+* D2 = Q2 XOR (Q0&Q1)   (typical for a small 3-bit counter)
+*
+* We'll do it with behavioral sources for clarity.
+
+B_D0 D0 0 V= NOT( V(Q0) )
+B_D1 D1 0 V= XOR( V(Q1), V(Q0) )
+B_D2 D2 0 V= XOR( V(Q2), AND( V(Q0), V(Q1) ) )
+
+* --- OUTPUT PROBES ---
+* We can label “NOTE[2:0]” as Q2,Q1,Q0 if you want to see a note code
+* Or you can keep them separate as “Q0, Q1, Q2” for debugging
+
+* =========== Simulation Commands ===========
+.tran 0 20us 0 1ns  ; run for 20us, step of 1ns
+.control
+run
+plot V(Q0) V(Q1) V(Q2) V(RST)
+.endc
+
+.end
+
+What This Netlist Does
+	1.	Clock (VCLK):
+A pulse source toggling between 0V and 5V at a 1 MHz rate (period = 1µs high + 1µs low). Adjust period and duty cycle for your needs.
+	2.	Reset (VRESET):
+Pulses from 5V down to 0V at 2µs to simulate an asynchronous reset. While RST is high, flip-flops output zero.
+	3.	Behavioral Flip-Flops:
+	•	Each uses a B element with an expression referencing Delay(V(Dx), CLK, 1n).
+	•	The if(V(RST)>2.5, 0, Delay(...)) statement forces the output to 0 if reset is high.
+	•	This is a simplified approach to mimic D flip-flop behavior in LTspice.
+	4.	Next-State Logic:
+	•	Shown as a simple binary increment to demonstrate how one might do combinational logic. You’d replace these expressions with your actual Mary-lamb note transition logic.
+	•	E.g., if your FSM needs to go from state 001 to 010 (E to D) in a fixed sequence, define logic that sets D0,D1,D2 accordingly.
+	5.	Plot:
+	•	The .control section auto-runs a transient simulation and plots Q0, Q1, Q2, RST.
+	•	You’ll see Q0, Q1, Q2 step through states once RST drops low.
+
+3. Schematic Setup in LTspice (Optional)
+	1.	Create a new schematic in LTspice (File > New Schematic).
+	2.	Place Voltage Sources:
+	•	One for the clock (VCLK), set up as a PULSE source.
+	•	One for reset (VRESET).
+	•	One for Vdd (VDD).
+	3.	Add Behavioral Components:
+	•	In LTspice, press F2, select Behavio(u)ral Sources:
+	•	Place B elements for the flip-flop outputs (BFF0, BFF1, BFF2).
+	•	Place B elements for next-state logic (B_D0, B_D1, B_D2).
+	•	Edit their Value fields to match the expressions in the netlist.
+	4.	Wire them together:
+	•	CLK to the clock input expressions.
+	•	RST to the if(V(RST)... statements.
+	•	Output of each B next-state block (D0, D1, D2) feeding into the corresponding flip-flop expression.
+	5.	Run (Simulate > Run), then view waveforms.
+	•	Check Q0, Q1, Q2 in the waveform viewer.
+
+4. Adapting to Mary Had a Little Lamb
+
+If you want each state to correspond to a note (E, D, C, etc.):
+	1.	Define State Transition:
+	•	For example, state 001 means note E, then you want to go to 010 (D).
+	•	Hardcode or use logic gates to say: if current state = 001, next state = 010, if = 010, next = 011, etc.
+	•	In place of the binary increment logic, you could do something like:
+
+B_D0 D0 0 V= if( Q2==0 & Q1==0 & Q0==1, 0, ... )
+B_D1 D1 0 V= ...
+B_D2 D2 0 V= ...
+
+or use standard logic gates:
+
+B_ns0 Ns0 0 V= OR( AND( NOT(V(Q2)),NOT(V(Q1)),V(Q0) ), ... )  ; etc.
+
+
+	2.	Map the Outputs:
+	•	Q2:Q1:Q0 = 011 => E
+	•	Q2:Q1:Q0 = 010 => D
+	•	Q2:Q1:Q0 = 001 => C
+	•	Q2:Q1:Q0 = 000 => Rest, etc.
+	3.	Add a Done State:
+	•	Optionally, let the final state remain latched at 111 or something similar.
+	•	The combinational logic can stay in that state after your final note.
+
+5. Tips and Caveats
+	1.	Behavioral vs. Transistor-level
+	•	This example uses behavioral sources for digital logic, which is much simpler than modeling each transistor in a gate or flip-flop.
+	•	Good for quick functional checks, not for deep transistor-level analysis.
+	2.	Clock Speed & Simulation Time
+	•	If you use very fast clocks with many cycles, you may have to adjust your .tran statement so it doesn’t take forever to simulate.
+	•	Alternatively, pick a slower clock or reduce the total cycles you need to verify.
+	3.	Schematic Symbol for Flip-Flops
+	•	You can create a subcircuit and define a custom symbol if you prefer a standard “DFF” symbol on the schematic. The approach above keeps it inline for demonstration.
+	4.	Viewing the “Note”
+	•	In a real hardware design, NOTE[2:0] might drive a small DAC or go to an FPGA pin. In LTspice, you’ll just see the 3-bit digital wave.
+
+6. Next Steps (“Solution Endpoint”)
+	•	Verify that each state transitions in the correct order and at the correct time, which mirrors your Mary-lamb song sequence.
+	•	Once you’re satisfied, export waveforms or screenshots from LTspice to show in your documentation/lecture slides.
+	•	Optionally, extend the design: add gating for variable tempo, an extra input for repeated sections, or more states for a longer melody.
+
+Final Check: Further Refinement?
+	•	Clarity: Does your netlist or schematic clearly label each node (e.g., CLK, RST, Q0, Q1, Q2)?
+	•	Completeness: Is the next-state logic for Mary Had a Little Lamb fully captured? Or do you only have a placeholder increment?
+	•	Practical: If you’re focusing on timing or device-level analysis, consider whether you need more detailed transistor-level modeling.
+
+Feel free to modify the example or reach out if you need more advanced digital or analog modeling tips in LTspice. Good luck simulating your FSM!
