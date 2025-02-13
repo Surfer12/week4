@@ -222,7 +222,7 @@ This Finite State Machine (FSM) plays "Mary Had a Little Lamb" using:
 
 ### Understanding the 3-Bit Requirement
 1. **State Space Analysis**:
-   - We need to represent 5 distinct states
+   - For the 'Mary Had a Little Lamb' melody, we've determined that the FSM needs to differentiate between at least 5 key stages or phrases in the musical sequence.
    - Binary counting requires: 2² = 4 states (not enough)
    - Therefore, we need 2³ = 8 states (sufficient)
    - Using 3 bits gives us states 000 through 111
