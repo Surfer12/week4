@@ -3,7 +3,7 @@ SymbolType BLOCK
 RECTANGLE Normal -64 -48 64 48
 WINDOW 0 0 -64 Center 2
 WINDOW 3 0 64 Center 2
-SYMATTR Value MaryLambFSM
+SYMATTR Value MaryLambFSM_new
 SYMATTR Prefix X
 PIN -64 -32 LEFT 8
 PINATTR PinName CLK
