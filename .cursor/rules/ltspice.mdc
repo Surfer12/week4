@@ -1,7 +1,512 @@
 ---
-description: Creating .asc and .asy files 
+description: Creating .asc and .asy files
 globs: 
 ---
+# Schematic File Format Guidelines
 
- Tailor responses to focus on LTSpice for any circuit simulation or analysis tasks, .asc or .asy files and any other realted concepts. You can @ files here
-- You can use markdown but dont have to
+This document outlines the guidelines and requirements for all future netlist and schematic files in our project. All files must adhere to the new Version 4.1 syntax as described below.
+
+## Version 4.1 Syntax Overview
+
+1. **Header**: Every file must begin with the line:
+   
+       Version 4.1
+   
+2. **Sheet Declaration**: The file must include a SHEET declaration that specifies the sheet number and dimensions. Example:
+   
+       SHEET 1 880 680
+   
+3. **Wire Declarations**: WIRE statements must follow the header and sheet declarations. Each WIRE statement specifies connections between coordinates. Example:
+   
+       WIRE 48 -64 -16 -64
+   
+4. **Flags and IOPINs**: Input/Output labels and flags must be declared using FLAG and IOPIN statements. These specify signal names and their mapping onto physical pins. Example:
+   
+       FLAG -16 -32 B[3:0]
+       IOPIN -16 -32 In
+   
+5. **Symbol Blocks**: Use SYMBOL blocks to declare sub-modules or components (such as HalfAdder or FullAdder). Each block should include the SYMBOL keyword, its coordinates, orientation, and any symbolic attributes (e.g., Instance Names). Example:
+   
+       SYMBOL HalfAdder 416 192 M90
+       SYMATTR InstName X1
+
+6. **Subcircuit Definitions**: All subcircuit definitions must be placed in TEXT blocks with proper indentation using !+ for continuation lines:
+
+       TEXT -24 424 Left 2 !.subckt SUBCIRCUIT_NAME in1 in2 vdd vss out
+       TEXT -24 456 Left 2 !+ component_definition_line1
+       TEXT -24 488 Left 2 !+ component_definition_line2
+       TEXT -24 520 Left 2 !.ends
+
+7. **Simulation Directives**: All simulation commands must be placed in TEXT blocks:
+
+       TEXT -24 296 Left 2 !.tran 800n
+       TEXT -24 328 Left 2 !.model NMOS NMOS
+       TEXT -24 360 Left 2 !.model PMOS PMOS
+
+8. **Include Statements**: Use TEXT blocks for including external files:
+
+       TEXT -24 392 Left 2 !.include "external_file.asc"
+
+## References to Analysis Documents
+
+For further clarification on the design rationale, performance benefits, and detailed breakdown of the syntax, refer to the following documents:
+
+- [Analysis Document](/Users/ryanoates/week4/docs/analysis/analysis.md)
+- [Breakdown Explanation](/Users/ryanoates/week4/docs/analysis/breakdown.md)
+
+These documents provide additional context and detailed descriptions of the file format decisions, and they serve as the technical basis for this standard.
+
+## Implementation Requirements
+
+- **Consistency**: All new files must implement this syntax consistently. Any deviation must be approved through proper revision protocols.
+- **Automation**: Tools and scripts developed for processing these files should be updated to handle the Version 4.1 syntax.
+- **Documentation**: Any changes to the syntax or deviations must be documented and communicated to the team, along with an update to this guidelines document if needed.
+- **Hierarchical Design**: When using hierarchical designs:
+  - Each subcircuit must be defined in its own .asc file
+  - Symbol files (.asy) must be created for each subcircuit
+  - Include statements must use relative paths
+  - All dependencies must be properly documented
+
+## File Organization
+
+1. **Circuit Files (.asc)**:
+   - Main circuit file with Version 4.1 header
+   - SHEET declaration
+   - WIRE and FLAG statements
+   - SYMBOL blocks for components
+   - Simulation directives in TEXT blocks
+   - Include statements in TEXT blocks
+
+2. **Symbol Files (.asy)**:
+   - Generated automatically by LTspice
+   - One symbol file per subcircuit
+   - Must match pin names with subcircuit definition
+
+3. **Test Files**:
+   - Must follow same Version 4.1 syntax
+   - Include voltage/current sources for inputs
+   - Include proper simulation directives
+   - Document test vectors and expected results
+
+## Examples
+
+1. **Half Adder Implementation**:
+```
+Version 4.1
+SHEET 1 880 680
+
+* Circuit implementation
+WIRE 48 -64 32 -64
+...
+
+FLAG 32 -64 a
+IOPIN 32 -64 In
+...
+
+SYMBOL NAND 48 -64 R0
+SYMATTR InstName X1
+...
+
+TEXT -24 296 Left 2 !.tran 400n
+...
+```
+
+2. **Full Adder Implementation**:
+```
+Version 4.1
+SHEET 1 880 680
+
+* Circuit using Half Adders
+WIRE 176 128 144 128
+...
+
+FLAG 144 128 a
+IOPIN 144 128 In
+...
+
+SYMBOL half_adder 176 144 R0
+SYMATTR InstName X1
+...
+
+TEXT -24 296 Left 2 !.tran 800n
+...
+```
+
+## Revision History
+
+- **Initial Release**: Version 4.1 syntax requirements effective as of current date
+- **Update 1**: Added subcircuit definition formatting in TEXT blocks
+- **Update 2**: Added hierarchical design requirements
+- **Update 3**: Added detailed examples from half adder and full adder implementations
+
+By following these guidelines, we ensure standardization across our project and maintain compatibility with tools and automation scripts that depend on the Version 4.1 file format.# Computer Architecture Breakdown
+
+## Initial Assessment
+
+The computer architecture implements a basic single-cycle processor with the following specifications:
+
+- **Data Width:** 4-bit (ALU, registers, and memory)
+- **Instruction Width:** 8-bit
+- **Instruction Memory:** ROM-based with 256 locations
+- **Data Memory:** SRAM-based with 4 locations
+- **Register File:** 4-bit
+
+The architecture focuses on:
+- Implementation of an adder within an ALU
+- Overall system design including instruction set architecture, hardware components, data path, and control flow
+- Single-cycle design where each instruction completes in one clock cycle
+
+## Contextual Insights
+
+The codebase provides concrete implementations:
+
+- **ALU.asc:** A 4-bit ALU, differing from the 3-bit mentioned in the document.
+- **cla_4bit.asc:** A 4-bit Carry-Lookahead Adder.
+- **Computer.asc:** Integrates ALU, Register File, Instruction Memory, and Data Memory.
+- **InstructionMemory.asc:** ROM-based instruction memory.
+- **DataMem.asc:** SRAM-based data memory.
+- **dff.asc:** D Flip-Flop for sequential elements.
+- **NAND3.asc, MUX.asc:** Basic logic gates.
+
+## Component Breakdown
+
+### 1. Adder Design (Half & Full Adder)
+
+#### Version 4.1 Compliance
+- All adder components follow Version 4.1 syntax requirements
+- Hierarchical design with proper subcircuit definitions in TEXT blocks
+- Components include:
+  - `half_adder.asc`: Base component using NAND/INV/AND gates
+  - `full_adder.asc`: Uses two half adders and OR gate
+  - Associated `.asy` symbol files generated by LTspice
+
+#### Implementation Details
+- Truth tables and Boolean expressions for half and full adders are correctly described
+- NAND implementation details are accurate
+- Standard approach using two half-adders and an OR gate (implemented with NANDs)
+- Testing strategy covers component-level and integration testing
+
+#### File Structure
+```
+half_adder.asc:
+- Version 4.1 header
+- SHEET declaration
+- Core logic using NAND/INV/AND symbols
+- Subcircuit definitions in TEXT blocks
+- Simulation directives
+
+full_adder.asc:
+- Version 4.1 header
+- SHEET declaration
+- Uses half_adder symbols
+- OR gate implementation
+- Include statements for dependencies
+```
+
+### 2. ALU (Arithmetic Logic Unit)
+
+#### Version 4.1 Compliance
+- ALU implementation follows Version 4.1 syntax
+- Hierarchical design with proper symbol usage
+- Main file: `ALU.asc` with 4-bit operations
+- Dependencies properly included via TEXT blocks
+
+#### Implementation Details
+- 4-bit ALU implementation (BITS=4)
+- AddSub control for addition/subtraction
+- Input multiplexers and output routing
+- Status flags generation
+
+#### File Structure
+```
+ALU.asc:
+- Version 4.1 header
+- SHEET declaration
+- Four-bit data path implementation
+- Symbol blocks for components
+- Include statements for dependencies
+```
+
+### 3. Register File
+
+- **Markdown:** Describes temporary storage connected to ALU and data memory.
+- **Codebase (`LogicLibraryAlt/new-circuits/Register.asc`):** Basis for register file implementation.
+- **Details:** Uses D flip-flops (`dff.asc`) for data storage. Number of registers and width to be confirmed from `RegisterFile.asc`.
+
+### 4. Instruction Memory
+
+- **Markdown:** Describes SRAM-based with 7-bit instruction width.
+- **Codebase (`InstructionMemory.asc`):** Uses ROM (`SYMBOL ROM`). Program fixed post-manufacture. `SIZE=256` indicates memory size.
+- **Reconciliation:** Update markdown to reflect ROM implementation and 8-bit instruction width.
+
+### 5. Data Memory
+
+- **Markdown:** Describes SRAM, address-based access, and 3-bit data width.
+- **Codebase (`LogicLibraryAlt/new-circuits/DataMem.asc`):** 4-location, 4-bit data memory.
+- **Reconciliation:** Update markdown to reflect 4-bit data width and 4 memory locations.
+
+### 6. Control Logic
+
+- **Markdown:** Mentions instruction decode, operation control, memory access, and register file control.
+- **Codebase:** Implicit in `Computer.asc`. Control signals suggested by connections and flags.
+- **Details:** Likely implemented with logic gates and possibly a state machine.
+
+### 7. Clock System
+
+- **Markdown:** Single-clock domain, synchronous operation, edge-triggered components.
+- **Codebase:** Confirmed by `Clk` flag in `Computer.asc` and use of D flip-flops.
+
+## Instruction Set Architecture (ISA)
+
+The processor implements a simple RISC-like instruction set:
+
+- **ADD:** `00 Dest[2:0] X Src[1:0]` - Add two registers
+- **SUB:** `01 Dest[2:0] X Src[1:0]` - Subtract two registers
+- **LOAD:** `11 Reg[2:0] X Addr[1:0]` - Load from memory to register
+- **STORE:** `10 Reg[2:0] X Addr[1:0]` - Store register to memory
+
+**Instruction Format:**
+- First 2 bits: Opcode
+- Next 3 bits: Register specifier
+- 'X': Reserved/unused bit
+- Last 2 bits: Source register or memory address
+
+## Data Path and Control Flow
+
+- **Markdown:** Describes fetch-decode-execute cycle.
+- **Codebase:** Connections in `Computer.asc` illustrate data path. Operations flow from Instruction Memory to Register File, ALU, and back.
+- **Signal Timing:** Single-cycle design requires all operations to complete within one clock cycle.
+
+## Performance Characteristics
+
+- **Markdown:** Highlights single-cycle execution, fixed instruction latency, and memory access delays.
+- **Codebase:** `.tran` directives in testbenches for transient analysis.
+- **Details:** Performance limited by the slowest component in the critical path. Single-cycle design simplifies control but limits clock speed.
+
+## Reasoning and Analysis
+
+The architecture is basic but functional. The use of a carry-lookahead adder within the ALU enhances performance by reducing carry propagation delay. Single-cycle design simplifies control logic but limits clock frequency. Limited instruction set and memory sizes are suitable for simple computations.
+
+## Output Generation Guidance
+
+- **Discrepancies:** Address inconsistencies between markdown and codebase.
+- **Instruction Format:** Clarify instruction formats, especially the 'X' placeholders.
+- **Register File Details:** Include specifics once `RegisterFile.asc` is available.
+- **Control Logic:** Describe control signals and operations. Consider adding a state diagram for visualization.
+- **Missing Files:** Include contents of `RegisterFile.asc` and `ALU_Core.asc`.
+- **Diagram:** Add a block diagram to show component interconnections.
+
+## Examples
+
+The provided example program is helpful. More examples demonstrating different instructions and addressing modes would be beneficial.
+
+## Notes and Clarifications
+
+- ROM for instruction memory implies fixed programs, affecting flexibility and debugging.
+- Small data memory size limits program complexity.
+- Single-cycle design is simple but not necessarily efficient in terms of performance.
+
+## Logging and Versioning
+
+## Version 4.1 Compliance Summary
+
+### File Organization
+1. **Core Components**
+   - All `.asc` files follow Version 4.1 syntax
+   - Proper SHEET declarations and WIRE statements
+   - Consistent use of FLAG and IOPIN declarations
+   - Subcircuit definitions in TEXT blocks
+
+2. **Symbol Files**
+   - `.asy` files generated for all subcircuits
+   - Pin names match subcircuit definitions
+   - Consistent orientation and placement
+
+3. **Test Benches**
+   - Follow Version 4.1 syntax
+   - Include proper simulation directives
+   - Document test vectors and expected results
+
+### Hierarchical Design
+1. **Component Dependencies**
+   - Clear dependency chain from ALU to basic gates
+   - Proper include statements in TEXT blocks
+   - Symbol files for all subcircuits
+
+2. **File Structure**
+   - Logical organization of components
+   - Consistent naming conventions
+   - Clear separation of test files
+
+### Verification Process
+1. **Component Testing**
+   - Individual component verification
+   - Integration testing with Version 4.1 compliant testbenches
+   - Documentation of test results
+# LTspice Circuit Analysis and Version 4.1 Compliance
+
+## Overview
+
+This document analyzes the implementation of digital logic components in LTspice, with particular focus on Version 4.1 syntax compliance and hierarchical design principles.
+
+## Version 4.1 Syntax Analysis
+
+### 1. File Structure Compliance
+
+All circuit files (.asc) in the project follow the Version 4.1 syntax requirements:
+
+```
+Version 4.1
+SHEET 1 880 680
+[WIRE statements]
+[FLAG/IOPIN declarations]
+[SYMBOL blocks]
+[TEXT blocks for directives]
+```
+
+### 2. Hierarchical Design Implementation
+
+#### Component Hierarchy
+```
+ALU
+├── four_bit_adder
+│   ├── full_adder
+│   │   ├── half_adder
+│   │   │   ├── NAND
+│   │   │   ├── INVERT
+│   │   │   └── AND
+│   │   └── OR
+│   └── XOR
+└── control_logic
+```
+
+#### File Dependencies
+```
+alu.asc
+├── full_adder.asc
+│   └── half_adder.asc
+└── standard.txt
+```
+
+### 3. Subcircuit Implementation
+
+#### Basic Gates
+```
+TEXT -24 424 Left 2 !.subckt INVERT in vdd vss out
+TEXT -24 456 Left 2 !+ MP1 out in vdd vdd PMOS
+TEXT -24 488 Left 2 !+ MN1 out in vss vss NMOS
+TEXT -24 520 Left 2 !.ends
+```
+
+#### Complex Components
+```
+TEXT -24 552 Left 2 !.subckt NAND in1 in2 vdd vss out
+TEXT -24 584 Left 2 !+ [component implementation]
+TEXT -24 616 Left 2 !.ends
+```
+
+## Circuit Analysis
+
+### 1. Half Adder
+- Implementation using NAND/INV/AND gates
+- Version 4.1 compliant structure
+- Proper subcircuit definitions
+- Complete test coverage
+
+### 2. Full Adder
+- Built from two half adders
+- Hierarchical design with proper includes
+- Version 4.1 compliant structure
+- Integration testing
+
+### 3. ALU
+- 4-bit implementation
+- Proper use of subcircuits
+- Version 4.1 compliant structure
+- Complete system testing
+
+## Verification and Testing
+
+### 1. Component-Level Testing
+```
+* Test vectors for half adder
+VA a 0 PULSE(0 5 0 1n 1n 200n 400n)
+VB b 0 PULSE(0 5 0 1n 1n 400n 800n)
+```
+
+### 2. Integration Testing
+```
+* Full adder test configuration
+.tran 1600n
+.include "half_adder.asc"
+```
+
+### 3. System-Level Testing
+```
+* ALU test setup
+.tran 1600n
+.include "full_adder.asc"
+.include "half_adder.asc"
+```
+
+## Performance Analysis
+
+### 1. Timing Characteristics
+- Gate delays
+- Critical path analysis
+- Setup and hold times
+
+### 2. Power Consumption
+- Static power analysis
+- Dynamic power analysis
+- Power optimization opportunities
+
+## Recommendations
+
+1. **Syntax Compliance**
+   - Maintain Version 4.1 syntax in all new files
+   - Update legacy files to Version 4.1
+   - Use automated validation tools
+
+2. **Design Hierarchy**
+   - Continue modular approach
+   - Maintain clear dependency structure
+   - Document component interfaces
+
+3. **Testing Strategy**
+   - Expand test coverage
+   - Automate regression testing
+   - Document test vectors
+
+## Appendix
+
+### A. Version 4.1 Syntax Reference
+```
+Version 4.1
+SHEET 1 880 680
+WIRE 48 -64 32 -64
+FLAG 32 -64 signal_name
+IOPIN 32 -64 In/Out
+SYMBOL component_name coordinates
+TEXT -24 296 Left 2 !directive
+```
+
+### B. Standard Cell Library
+- NAND
+- INVERT
+- AND
+- OR
+- XOR
+
+### C. Test Vector Documentation
+- Input combinations
+- Expected outputs
+- Timing requirements
+- Test coverage metrics
+
+## Version History
+
+1. Initial release
+2. Added Version 4.1 compliance analysis
+3. Updated hierarchical design documentation
+4. Added performance analysis section
