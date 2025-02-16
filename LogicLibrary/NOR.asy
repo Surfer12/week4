@@ -11,12 +11,12 @@ PINATTR PinName A8
 PINATTR SpiceOrder 2
 PINATTR SpiceOrder 8
 PIN -48 16 LEFT 8
-WARNING: Assigning SpiceOrder 4 to pin
+WARNING: Assigning SpiceOrder 9 to pin
 PINATTR PinName B8
-PINATTR SpiceOrder 4
+PINATTR SpiceOrder 9
 PINATTR SpiceOrder 8
 PIN 48 0 RIGHT 8
-WARNING: Assigning SpiceOrder 2 to pin
+WARNING: Assigning SpiceOrder 9 to pin
 PINATTR PinName NOR8
-PINATTR SpiceOrder 2
+PINATTR SpiceOrder 9
 PINATTR SpiceOrder 8
