@@ -2,8 +2,9 @@
 *Based on Professor's Reference Library (/Users/ryanoates/week4/professor-reference-library/)*
 
 ## File Version and Basic Structure
-- All files must use **Version 4** header
+- All files must use **Version 4.1** header
 - Required components:
+  - Schematic files (`.asc`) must use **Version 4.1** header; symbol files (`.asy`) must use **Version 4** header
   - SHEET definitions
   - WIRE declarations
   - FLAGs
@@ -165,3 +166,10 @@ To ensure compliance with these standards:
 
 For questions or clarification, refer to the professor's reference library at:
 `/Users/ryanoates/week4/professor-reference-library/`
+
+## Additional Context
+- These guidelines are derived from and should be cross-referenced with the Professor's Reference Library located at `/Users/ryanoates/week4/professor-reference-library/`.
+- Schematic files (`.asc`) are intended for LTSpice simulation and must use the **Version 4.1** header, while symbol files (`.asy`) are optimized for block representations and must use the **Version 4** header.
+- Maintaining proper file organization and naming conventions (as detailed above) is essential for consistency across complex circuit designs.
+- Any revisions to circuit components or simulation setups should refer back to these standards to ensure compliance with both design and simulation requirements.
+- This document is a living standard; any feedback or update from in-class sessions or professor's revisions should be incorporated promptly.
