@@ -16,9 +16,9 @@ PINATTR PinName B8
 PINATTR SpiceOrder 1
 PINATTR SpiceOrder 8
 PIN -32 16 LEFT 8
-WARNING: Assigning SpiceOrder 3 to pin
+WARNING: Assigning SpiceOrder 1 to pin
 PINATTR PinName C8
-PINATTR SpiceOrder 3
+PINATTR SpiceOrder 1
 PINATTR SpiceOrder 8
 PIN 80 0 RIGHT 8
 WARNING: Assigning SpiceOrder 3 to pin
