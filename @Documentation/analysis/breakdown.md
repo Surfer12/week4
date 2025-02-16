@@ -1,0 +1,126 @@
+# Computer Architecture Breakdown
+
+## Initial Assessment
+
+The computer architecture implements a basic single-cycle processor with the following specifications:
+
+- **Data Width:** 4-bit (ALU, registers, and memory)
+- **Instruction Width:** 8-bit
+- **Instruction Memory:** ROM-based with 256 locations
+- **Data Memory:** SRAM-based with 4 locations
+- **Register File:** 4-bit
+
+The architecture focuses on:
+- Implementation of an adder within an ALU
+- Overall system design including instruction set architecture, hardware components, data path, and control flow
+- Single-cycle design where each instruction completes in one clock cycle
+
+## Contextual Insights
+
+The codebase provides concrete implementations:
+
+- **ALU.asc:** A 4-bit ALU, differing from the 3-bit mentioned in the document.
+- **cla_4bit.asc:** A 4-bit Carry-Lookahead Adder.
+- **Computer.asc:** Integrates ALU, Register File, Instruction Memory, and Data Memory.
+- **InstructionMemory.asc:** ROM-based instruction memory.
+- **DataMem.asc:** SRAM-based data memory.
+- **dff.asc:** D Flip-Flop for sequential elements.
+- **NAND3.asc, MUX.asc:** Basic logic gates.
+
+## Component Breakdown
+
+### 1. Adder Design (Half & Full Adder)
+
+- Truth tables and Boolean expressions for half and full adders are correctly described.
+- NAND implementation details are accurate.
+- Standard approach using two half-adders and an OR gate (implemented with NANDs).
+- Testing strategy covers component-level and integration testing.
+
+### 2. ALU (Arithmetic Logic Unit)
+
+- **Markdown:** Describes `AddSub1` unit, input multiplexers, output routing, and status flags. Mentions 3-bit operations.
+- **Codebase (`ALU.asc`):** Shows a 4-bit ALU (`BITS=4`). Discrepancy noted. `ALU_Core` likely defines arithmetic operations. `AddSub1` controls addition/subtraction.
+- **Reconciliation:** ALU is 4-bit as per code. Update markdown to reflect this.
+
+### 3. Register File
+
+- **Markdown:** Describes temporary storage connected to ALU and data memory.
+- **Codebase (`LogicLibraryAlt/new-circuits/Register.asc`):** Basis for register file implementation.
+- **Details:** Uses D flip-flops (`dff.asc`) for data storage. Number of registers and width to be confirmed from `RegisterFile.asc`.
+
+### 4. Instruction Memory
+
+- **Markdown:** Describes SRAM-based with 7-bit instruction width.
+- **Codebase (`InstructionMemory.asc`):** Uses ROM (`SYMBOL ROM`). Program fixed post-manufacture. `SIZE=256` indicates memory size.
+- **Reconciliation:** Update markdown to reflect ROM implementation and 8-bit instruction width.
+
+### 5. Data Memory
+
+- **Markdown:** Describes SRAM, address-based access, and 3-bit data width.
+- **Codebase (`LogicLibraryAlt/new-circuits/DataMem.asc`):** 4-location, 4-bit data memory.
+- **Reconciliation:** Update markdown to reflect 4-bit data width and 4 memory locations.
+
+### 6. Control Logic
+
+- **Markdown:** Mentions instruction decode, operation control, memory access, and register file control.
+- **Codebase:** Implicit in `Computer.asc`. Control signals suggested by connections and flags.
+- **Details:** Likely implemented with logic gates and possibly a state machine.
+
+### 7. Clock System
+
+- **Markdown:** Single-clock domain, synchronous operation, edge-triggered components.
+- **Codebase:** Confirmed by `Clk` flag in `Computer.asc` and use of D flip-flops.
+
+## Instruction Set Architecture (ISA)
+
+The processor implements a simple RISC-like instruction set:
+
+- **ADD:** `00 Dest[2:0] X Src[1:0]` - Add two registers
+- **SUB:** `01 Dest[2:0] X Src[1:0]` - Subtract two registers
+- **LOAD:** `11 Reg[2:0] X Addr[1:0]` - Load from memory to register
+- **STORE:** `10 Reg[2:0] X Addr[1:0]` - Store register to memory
+
+**Instruction Format:**
+- First 2 bits: Opcode
+- Next 3 bits: Register specifier
+- 'X': Reserved/unused bit
+- Last 2 bits: Source register or memory address
+
+## Data Path and Control Flow
+
+- **Markdown:** Describes fetch-decode-execute cycle.
+- **Codebase:** Connections in `Computer.asc` illustrate data path. Operations flow from Instruction Memory to Register File, ALU, and back.
+- **Signal Timing:** Single-cycle design requires all operations to complete within one clock cycle.
+
+## Performance Characteristics
+
+- **Markdown:** Highlights single-cycle execution, fixed instruction latency, and memory access delays.
+- **Codebase:** `.tran` directives in testbenches for transient analysis.
+- **Details:** Performance limited by the slowest component in the critical path. Single-cycle design simplifies control but limits clock speed.
+
+## Reasoning and Analysis
+
+The architecture is basic but functional. The use of a carry-lookahead adder within the ALU enhances performance by reducing carry propagation delay. Single-cycle design simplifies control logic but limits clock frequency. Limited instruction set and memory sizes are suitable for simple computations.
+
+## Output Generation Guidance
+
+- **Discrepancies:** Address inconsistencies between markdown and codebase.
+- **Instruction Format:** Clarify instruction formats, especially the 'X' placeholders.
+- **Register File Details:** Include specifics once `RegisterFile.asc` is available.
+- **Control Logic:** Describe control signals and operations. Consider adding a state diagram for visualization.
+- **Missing Files:** Include contents of `RegisterFile.asc` and `ALU_Core.asc`.
+- **Diagram:** Add a block diagram to show component interconnections.
+
+## Examples
+
+The provided example program is helpful. More examples demonstrating different instructions and addressing modes would be beneficial.
+
+## Notes and Clarifications
+
+- ROM for instruction memory implies fixed programs, affecting flexibility and debugging.
+- Small data memory size limits program complexity.
+- Single-cycle design is simple but not necessarily efficient in terms of performance.
+
+## Logging and Versioning
+
+```
