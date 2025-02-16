@@ -3,47 +3,47 @@ SymbolType BLOCK
 RECTANGLE Normal -112 -136 128 136
 WINDOW 0 8 -136 Bottom 2
 PIN -112 -112 LEFT 88
-WARNING: Assigning SpiceOrder 9 to pin
-PINATTR PinName In08
-PINATTR SpiceOrder 9
-PINATTR SpiceOrder 18
+PINATTR PinName Pin_17173
+PINATTR SpiceOrder 1
+PINATTR PinName In0
+PINATTR SpiceOrder 1
 PIN -112 -80 LEFT 88
-WARNING: Assigning SpiceOrder 7 to pin
-PINATTR PinName In18
-PINATTR SpiceOrder 7
-PINATTR SpiceOrder 28
-PIN -112 -48 LEFT 88
-WARNING: Assigning SpiceOrder 2 to pin
-PINATTR PinName In28
+PINATTR PinName Pin_22053
+PINATTR SpiceOrder 1
+PINATTR PinName In1
 PINATTR SpiceOrder 2
-PINATTR SpiceOrder 38
+PIN -112 -48 LEFT 88
+PINATTR PinName Pin_14429
+PINATTR SpiceOrder 1
+PINATTR PinName In2
+PINATTR SpiceOrder 3
 PIN -112 -16 LEFT 88
-WARNING: Assigning SpiceOrder 5 to pin
-PINATTR PinName In38
-PINATTR SpiceOrder 5
-PINATTR SpiceOrder 48
+PINATTR PinName Pin_1931
+PINATTR SpiceOrder 1
+PINATTR PinName In3
+PINATTR SpiceOrder 4
 PIN -112 16 LEFT 88
-WARNING: Assigning SpiceOrder 6 to pin
-PINATTR PinName In48
-PINATTR SpiceOrder 6
-PINATTR SpiceOrder 58
+PINATTR PinName Pin_8120
+PINATTR SpiceOrder 1
+PINATTR PinName In4
+PINATTR SpiceOrder 5
 PIN -112 48 LEFT 88
-WARNING: Assigning SpiceOrder 7 to pin
-PINATTR PinName In58
-PINATTR SpiceOrder 7
-PINATTR SpiceOrder 68
+PINATTR PinName Pin_14915
+PINATTR SpiceOrder 1
+PINATTR PinName In5
+PINATTR SpiceOrder 6
 PIN -112 80 LEFT 88
-WARNING: Assigning SpiceOrder 6 to pin
-PINATTR PinName In68
-PINATTR SpiceOrder 6
-PINATTR SpiceOrder 78
+PINATTR PinName Pin_15496
+PINATTR SpiceOrder 1
+PINATTR PinName In6
+PINATTR SpiceOrder 7
 PIN -112 112 LEFT 88
-WARNING: Assigning SpiceOrder 8 to pin
-PINATTR PinName In78
+PINATTR PinName Pin_26954
+PINATTR SpiceOrder 1
+PINATTR PinName In7
 PINATTR SpiceOrder 8
-PINATTR SpiceOrder 88
 PIN 128 0 RIGHT 88
-WARNING: Assigning SpiceOrder 6 to pin
-PINATTR PinName INSTR[7:0]8
-PINATTR SpiceOrder 6
-PINATTR SpiceOrder 98
+PINATTR PinName Pin_17715
+PINATTR SpiceOrder 1
+PINATTR PinName INSTR[7:0]
+PINATTR SpiceOrder 9

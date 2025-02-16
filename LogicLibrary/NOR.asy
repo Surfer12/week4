@@ -6,17 +6,11 @@ ARC Normal -168 -33 47 67 45 7 -59 -33
 ARC Normal -168 33 47 -67 -59 33 45 -7
 WINDOW 0 0 -40 Bottom 2
 PIN -48 -16 LEFT 8
-WARNING: Assigning SpiceOrder 6 to pin
-PINATTR PinName A8
-PINATTR SpiceOrder 6
-PINATTR SpiceOrder 8
+PINATTR PinName A
+PINATTR SpiceOrder 1
 PIN -48 16 LEFT 8
-WARNING: Assigning SpiceOrder 6 to pin
-PINATTR PinName B8
-PINATTR SpiceOrder 6
-PINATTR SpiceOrder 8
+PINATTR PinName B
+PINATTR SpiceOrder 2
 PIN 48 0 RIGHT 8
-WARNING: Assigning SpiceOrder 3 to pin
-PINATTR PinName NOR8
+PINATTR PinName NOR
 PINATTR SpiceOrder 3
-PINATTR SpiceOrder 8

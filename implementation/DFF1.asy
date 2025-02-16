@@ -1,0 +1,25 @@
+Version 4
+SymbolType BLOCK
+RECTANGLE Normal -64 -40 80 40
+TEXT -7 -28 Left 2 dff1
+WINDOW 0 8 -40 Bottom 2
+PIN -64 -16 LEFT 88
+PINATTR PinName Pin_5573
+PINATTR SpiceOrder 1
+PINATTR PinName CLK
+PINATTR SpiceOrder 1
+PIN -64 16 LEFT 88
+PINATTR PinName Pin_18707
+PINATTR SpiceOrder 1
+PINATTR PinName D
+PINATTR SpiceOrder 2
+PIN 80 -16 RIGHT 88
+PINATTR PinName Pin_5227
+PINATTR SpiceOrder 1
+PINATTR PinName Q
+PINATTR SpiceOrder 3
+PIN 80 16 RIGHT 88
+PINATTR PinName Pin_4056
+PINATTR SpiceOrder 1
+PINATTR PinName Qbar
+PINATTR SpiceOrder 4

@@ -3,22 +3,22 @@ SymbolType BLOCK
 RECTANGLE Normal -96 -56 112 56
 WINDOW 0 8 -56 Bottom 2
 PIN -96 -32 LEFT 88
-WARNING: Assigning SpiceOrder 3 to pin
-PINATTR PinName CLK[7:0]8
-PINATTR SpiceOrder 3
-PINATTR SpiceOrder 18
+PINATTR PinName Pin_1920
+PINATTR SpiceOrder 1
+PINATTR PinName CLK[7:0]
+PINATTR SpiceOrder 1
 PIN -96 0 LEFT 88
-WARNING: Assigning SpiceOrder 9 to pin
-PINATTR PinName D[7:0]8
-PINATTR SpiceOrder 9
-PINATTR SpiceOrder 28
+PINATTR PinName Pin_5371
+PINATTR SpiceOrder 1
+PINATTR PinName D[7:0]
+PINATTR SpiceOrder 2
 PIN -96 32 LEFT 88
-WARNING: Assigning SpiceOrder 4 to pin
-PINATTR PinName Sel[2:0]8
-PINATTR SpiceOrder 4
-PINATTR SpiceOrder 38
-PIN 112 0 RIGHT 88
-WARNING: Assigning SpiceOrder 3 to pin
-PINATTR PinName Out8
+PINATTR PinName Pin_18250
+PINATTR SpiceOrder 1
+PINATTR PinName Sel[2:0]
 PINATTR SpiceOrder 3
-PINATTR SpiceOrder 48
+PIN 112 0 RIGHT 88
+PINATTR PinName Pin_6381
+PINATTR SpiceOrder 1
+PINATTR PinName Out
+PINATTR SpiceOrder 4
