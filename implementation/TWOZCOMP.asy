@@ -8,7 +8,7 @@ PINATTR PinName A[3:0]8
 PINATTR SpiceOrder 4
 PINATTR SpiceOrder 18
 PIN 176 0 RIGHT 88
-WARNING: Assigning SpiceOrder 7 to pin
+WARNING: Assigning SpiceOrder 6 to pin
 PINATTR PinName TwozComp[3:0]8
-PINATTR SpiceOrder 7
+PINATTR SpiceOrder 6
 PINATTR SpiceOrder 28
