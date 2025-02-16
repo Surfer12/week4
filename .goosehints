@@ -20,6 +20,10 @@ The `.asc` file could be converted to a graphical netlist using the LTspice form
 2. Advance to a full schematic using LTspice's syntax (e.g., `WIRE`, `SYMBOL`, `FLAG`).
 3. Ensure the FSM functionalities (e.g., transitions, logic) are preserved.
 
+"All future netlist and schematic files must be written using the Version 4.1 syntax. This includes headers like 'Version 4.1', SHEET definitions, WIRE declarations, FLAGs,
+ IOPIN, and SYMBOL blocks with attributes. For further reference on the requirements and rationale behind this format, please consult the analysis documentation located at 
+/Users/ryanoates/week4/docs/analysis/analysis.md and the breakdown explanation at /Users/ryanoates/week4/docs/analysis/breakdown.md."
+
 
 1. **Syntax and Structure**:
    - **Logic Library**: The files in the logic library, like `lab2-update-feb8-retry.asc`, use a more traditional SPICE syntax where components are defined using `.SUBCKT` directives, and connections are implied through node names. This format is more akin to a netlist where the focus is on the connectivity and functionality rather than graphical representation.
