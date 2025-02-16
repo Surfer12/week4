@@ -1,0 +1,47 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+
+group = 'com.fulladder'
+version = '1.0.0'
+mainClassName = 'Main'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // Testing Libraries
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.0'
+    testImplementation 'org.mockito:mockito-core:5.5.0'
+
+    // Neo4j Graph Database
+    implementation 'org.neo4j.driver:neo4j-java-driver:5.12.0'
+
+    // ORM and Database Access
+    implementation 'org.springframework:spring-jdbc:5.3.29'
+    implementation 'org.hibernate:hibernate-core:5.6.15.Final'
+
+    // Serialization Libraries
+    implementation 'com.esotericsoftware:kryo:5.4.0'
+    implementation 'org.yaml:snakeyaml:2.2'
+    implementation 'com.thoughtworks.xstream:xstream:1.4.20'
+
+    // Spring MVC
+    implementation 'org.springframework:spring-webmvc:5.3.29'
+
+    // Logging
+    implementation 'ch.qos.logback:logback-classic:1.4.11'
+
+    // CSV Processing
+    implementation 'com.opencsv:opencsv:5.6'
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+tasks.test {
+    useJUnitPlatform()
+}

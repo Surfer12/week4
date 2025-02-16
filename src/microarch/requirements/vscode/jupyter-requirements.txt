@@ -1,0 +1,39 @@
+# Jupyter Notebook Requirements for Microarchitecture Learning Lab
+
+# Jupyter Core
+jupyter==1.0.0
+
+
+# Interactive Widgets
+ipywidgets==7.7.0
+widgetsnbextension==3.6.0
+
+# Visualization Extensions
+plotly==5.7.0
+bokeh==2.4.3
+
+# Scientific Computing
+numpy==1.22.4
+pandas==1.4.2
+scipy==1.8.1
+
+# Machine Learning and Data Science
+scikit-learn==1.5.0
+
+
+# Plotting and Visualization
+matplotlib==3.5.2
+seaborn==0.11.2
+altair==4.2.0
+
+# Notebook Extensions
+jupyter-contrib-nbextensions==0.5.1
+jupyter-nbextensions-configurator==0.4.1
+
+# Code Quality and Formatting
+black==24.3.0
+isort==5.10.1
+
+# Performance Profiling
+memory-profiler==0.60.0
+line-profiler==3.5.1 

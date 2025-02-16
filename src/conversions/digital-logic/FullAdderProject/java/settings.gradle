@@ -1,0 +1,2 @@
+rootProject.name = 'fulladder-java'
+include ':core', ':gates', ':spice', ':test', ':web'
