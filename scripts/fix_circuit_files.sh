@@ -7,9 +7,10 @@ YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
 # Create required directories
+echo "Setting up directories..."
 mkdir -p LogicLibrary implementation tests
 
-# Fix version and basic structure
+# Process a single file
 fix_file() {
     local file=$1
     local temp_file=$(mktemp)
@@ -22,7 +23,7 @@ fix_file() {
     
     echo -e "${YELLOW}Fixing $file...${NC}"
     
-    # Read file and fix header
+    # Read file and make modifications
     {
         echo "Version 4"
         if $is_asy; then
@@ -31,40 +32,17 @@ fix_file() {
             echo "SHEET 1 880 680"
         fi
         
-        # Skip existing header
+        # Skip existing header and copy rest of file
         tail -n +2 "$file" | while IFS= read -r line; do
             # Skip existing SymbolType or SHEET line
             if [[ "$line" =~ ^(SymbolType|SHEET) ]]; then
                 continue
             fi
-            
-            # Fix pin attributes for .asy files
-            if $is_asy; then
-                if [[ "$line" =~ ^PIN[[:space:]]+(.*) ]]; then
-                    # Fix pin spacing to 8
-                    line=$(echo "$line" | sed 's/[0-9]*$/8/')
-                    echo "$line"
-                    # Add pin attributes if missing
-                    if ! grep -A2 "$line" "$file" | grep -q "PINATTR"; then
-                        echo "PINATTR PinName Pin_${RANDOM}"
-                        echo "PINATTR SpiceOrder 1"
-                    fi
-                    continue
-                fi
-            fi
-            
-            # Fix instance names for .asc files
-            if ! $is_asy; then
-                if [[ "$line" =~ InstName && ! "$line" =~ "X[0-9]" ]]; then
-                    line=$(echo "$line" | sed 's/InstName .*/InstName X1/')
-                fi
-            fi
-            
             echo "$line"
         done
     } > "$temp_file"
     
-    # Move to appropriate directory
+    # Determine target directory
     local target_dir="implementation"
     if [[ "$filename" =~ ^(AND|OR|NOT|NAND|NOR|XOR|XNOR|INVERT|BUFFER|MUX|DEMUX|FF|LATCH) ]]; then
         target_dir="LogicLibrary"
@@ -72,9 +50,11 @@ fix_file() {
         target_dir="tests"
     fi
     
+    # Convert filename to uppercase
     local uppercase_name=$(echo "${filename%.*}" | tr '[:lower:]' '[:upper:]')
     local target_file="$target_dir/${uppercase_name}.${filename##*.}"
     
+    # Move file to target directory
     mv "$temp_file" "$target_file"
     echo -e "${GREEN}Fixed and moved to $target_file${NC}"
 }
