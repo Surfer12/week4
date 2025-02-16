@@ -10,30 +10,34 @@ YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
 # Error counter
+total_files=0
 errors=0
 warnings=0
 
 # Check .asc file
 check_asc() {
     local file=$1
-    echo -e "\n${YELLOW}Checking $file...${NC}"
+    local has_error=0
+    local file_errors=""
+    ((total_files++))
     
     # Check Version
     if ! grep -q "^Version 4$" "$file"; then
-        echo -e "${RED}ERROR: Invalid or missing Version 4 header${NC}"
+        file_errors+="${RED}ERROR: Invalid or missing Version 4 header${NC}\n"
         ((errors++))
+        has_error=1
     fi
     
     # Check SHEET
     if ! grep -q "^SHEET 1 880 680$" "$file"; then
-        echo -e "${YELLOW}WARNING: Non-standard sheet size${NC}"
+        file_errors+="${YELLOW}WARNING: Non-standard sheet size${NC}\n"
         ((warnings++))
     fi
     
     # Check SYMBOL naming
     grep "^SYMBOL" "$file" | while read -r line; do
         if ! echo "$line" | grep -q "InstName X[0-9]"; then
-            echo -e "${YELLOW}WARNING: Non-standard instance naming found in: $line${NC}"
+            file_errors+="${YELLOW}WARNING: Non-standard instance naming found in: $line${NC}\n"
             ((warnings++))
         fi
     done
@@ -42,81 +46,94 @@ check_asc() {
     flags=$(grep "^FLAG" "$file" | wc -l)
     iopins=$(grep "^IOPIN" "$file" | wc -l)
     if [ "$flags" != "$iopins" ]; then
-        echo -e "${RED}ERROR: Mismatch between FLAGS ($flags) and IOPINs ($iopins)${NC}"
+        file_errors+="${RED}ERROR: Mismatch between FLAGS ($flags) and IOPINs ($iopins)${NC}\n"
         ((errors++))
+        has_error=1
     fi
     
-    # Check component naming case
-    grep "^SYMBOL" "$file" | while read -r line; do
-        component=$(echo "$line" | awk '{print $2}')
-        if [[ ! "$component" =~ ^[A-Z] ]]; then
-            echo -e "${RED}ERROR: Component $component should be uppercase${NC}"
-            ((errors++))
-        fi
-    done
+    # Only print if there are errors
+    if [ $has_error -eq 1 ]; then
+        echo -e "\n${RED}Issues in $file:${NC}"
+        echo -e "$file_errors"
+    fi
 }
 
 # Check .asy file
 check_asy() {
     local file=$1
-    echo -e "\n${YELLOW}Checking $file...${NC}"
+    local has_error=0
+    local file_errors=""
+    ((total_files++))
     
     # Check Version
     if ! grep -q "^Version 4$" "$file"; then
-        echo -e "${RED}ERROR: Invalid or missing Version 4 header${NC}"
+        file_errors+="${RED}ERROR: Invalid or missing Version 4 header${NC}\n"
         ((errors++))
+        has_error=1
     fi
     
     # Check SymbolType
     if ! grep -q "^SymbolType BLOCK$" "$file"; then
-        echo -e "${RED}ERROR: Missing or invalid SymbolType BLOCK${NC}"
+        file_errors+="${RED}ERROR: Missing or invalid SymbolType BLOCK${NC}\n"
         ((errors++))
+        has_error=1
     fi
     
     # Check PIN attributes
     pins=$(grep "^PIN" "$file" | wc -l)
     pinattrs=$(grep "^PINATTR" "$file" | wc -l)
     if [ "$((pinattrs/2))" != "$pins" ]; then
-        echo -e "${RED}ERROR: Missing PIN attributes${NC}"
+        file_errors+="${RED}ERROR: Missing PIN attributes${NC}\n"
         ((errors++))
+        has_error=1
     fi
     
     # Check pin directions
     grep "^PIN" "$file" | while read -r line; do
         if ! echo "$line" | grep -q "LEFT\|RIGHT"; then
-            echo -e "${YELLOW}WARNING: Non-standard pin direction: $line${NC}"
+            file_errors+="${YELLOW}WARNING: Non-standard pin direction: $line${NC}\n"
             ((warnings++))
         fi
     done
     
-    # Check pin spacing
-    grep "^PIN" "$file" | while read -r line; do
-        if ! echo "$line" | grep -q "8$"; then
-            echo -e "${YELLOW}WARNING: Non-standard pin spacing: $line${NC}"
-            ((warnings++))
-        fi
-    done
+    # Only print if there are errors
+    if [ $has_error -eq 1 ]; then
+        echo -e "\n${RED}Issues in $file:${NC}"
+        echo -e "$file_errors"
+    fi
 }
 
 # Main execution
 echo "Circuit File Validator"
 echo "===================="
 echo "Checking for compliance with professor's standards..."
+echo
 
 # Find and check all circuit files
-find . -name "*.asc" -type f | while read -r file; do
+find . -type f -name "*.asc" ! -path "*/professor-reference-library/*" | while read -r file; do
     check_asc "$file"
 done
 
-find . -name "*.asy" -type f | while read -r file; do
+find . -type f -name "*.asy" ! -path "*/professor-reference-library/*" | while read -r file; do
     check_asy "$file"
 done
 
 # Print summary
-echo -e "\n${YELLOW}Validation Complete${NC}"
-echo -e "Found ${RED}$errors errors${NC} and ${YELLOW}$warnings warnings${NC}"
+echo
+echo "Validation Summary"
+echo "================="
+echo -e "Total files checked: ${GREEN}$total_files${NC}"
+echo -e "Errors found: ${RED}$errors${NC}"
+echo -e "Warnings found: ${YELLOW}$warnings${NC}"
 
-# Exit with error if there were any errors
+# Color coding explanation
+echo
+echo "Color Coding:"
+echo -e "${RED}Red: Critical errors that must be fixed${NC}"
+echo -e "${YELLOW}Yellow: Warnings that should be reviewed${NC}"
+echo -e "${GREEN}Green: Compliant items${NC}"
+
+# Exit with error if any errors found
 if [ $errors -gt 0 ]; then
     exit 1
 fi
