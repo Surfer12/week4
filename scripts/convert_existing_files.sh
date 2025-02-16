@@ -22,12 +22,8 @@ mkdir -p LogicLibrary implementation tests
 is_basic_component() {
     local filename=$1
     # List of basic component keywords
-    for component in "AND" "OR" "NOT" "NAND" "NOR" "XOR" "XNOR" "INVERT" "BUFFER" "MUX" "DEMUX" "FF" "LATCH"; do
-        if echo "$filename" | grep -i "$component" > /dev/null; then
-            return 0
-        fi
-    done
-    return 1
+    echo "$filename" | grep -iE "AND|OR|NOT|NAND|NOR|XOR|XNOR|INVERT|BUFFER|MUX|DEMUX|FF|LATCH" > /dev/null
+    return $?
 }
 
 # Function to convert filename to uppercase
@@ -202,25 +198,13 @@ echo "===================="
 echo "Converting existing files to meet professor's standards..."
 echo
 
-# Create list of unique files (by basename) to convert
-declare -A files_to_convert
-
-# Find all circuit files
-while IFS= read -r file; do
+# Process files
+find . -type f \( -name "*.asc" -o -name "*.asy" \) | while read -r file; do
     if should_skip "$file"; then
         ((skipped_files++))
         continue
     fi
     
-    basename=$(basename "$file")
-    # Only store the first occurrence of each filename
-    if [ -z "${files_to_convert[$basename]}" ]; then
-        files_to_convert[$basename]="$file"
-    fi
-done < <(find . -type f \( -name "*.asc" -o -name "*.asy" \))
-
-# Convert the unique files
-for file in "${files_to_convert[@]}"; do
     case "${file##*.}" in
         "asc")
             convert_asc "$file"

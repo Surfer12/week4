@@ -1,0 +1,28 @@
+Version 4
+* Include key circuit definitions
+.include "ALU.asc"
+.include "cla_4bit.asc"
+.include "../LogicLibraryAlt/Computer.asc"
+
+SHEET 1 1200 800
+
+* ALU Instance
+SYMBOL ALU 400 200 R0
+SYMATTR InstName ALU1
+
+* CLA 4-bit Adder Instance
+SYMBOL cla_4bit 600 200 R0
+SYMATTR InstName CLA1
+
+* Computer System Instance
+SYMBOL Computer 800 200 R0
+SYMATTR InstName COMPUTER1
+
+* Simulation Directives
+TEXT 100 400 Left 2 !.tran 256m
+TEXT 100 432 Left 2 !.measure tran system_power AVG power FROM 0 TO 256m
+TEXT 100 464 Left 2 !.measure tran max_propagation MAX delay
+
+* Simulation Models
+TEXT 100 496 Left 2 !.model NMOS NMOS
+TEXT 100 528 Left 2 !.model PMOS PMOS 
